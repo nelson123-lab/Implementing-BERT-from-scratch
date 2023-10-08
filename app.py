@@ -8,6 +8,7 @@ from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from htmlTemplates import css, bot_template, user_template
 
 # To read pdf docs.
 def get_pdf_text(pdf_docs):
@@ -53,9 +54,16 @@ def main():
     load_dotenv()
     st.set_page_config(page_title = "Chat with Jake", page_icon=":books")
 
+    st.write(css, unsafe_allow_html=True)
     st.header("Chat with Jake")
     st.text_input('What should I guide you with?')
 
+    st.write(user_template.replace("{{MSG}}", "Hello Jake"), unsafe_allow_html=True)
+    st.write(bot_template.replace("{{MSG}}", "Hello Nelson"), unsafe_allow_html=True)
+
+    if "conversation" not in st.session_state:
+        st.session_state.conversation = None
+    
     with st.sidebar:
         st.subheader("Your documents")
         pdf_docs = st.file_uploader("Upload your documents", accept_multiple_files = True)
